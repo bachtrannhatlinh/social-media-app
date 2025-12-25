@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import authModalReducer from "../features/modalAuth/authSlice";
+import infouserReducer from "../features/infoUser/infoUserSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       authModal: authModalReducer,
+      userInfo: infouserReducer,
     },
   });
 };

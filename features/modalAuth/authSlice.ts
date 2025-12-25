@@ -2,26 +2,34 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 interface ModalAuthState {
-  isOpen: boolean;
+  isOpenLogInModal: boolean;
+  isOpenSignUpModal: boolean;
 }
 
 const initialState: ModalAuthState = {
-  isOpen: false,
+  isOpenLogInModal: false,
+  isOpenSignUpModal: false,
 };
 
 export const modalAuthSlice = createSlice({
   name: "authModal",
   initialState,
   reducers: {
-    openModal(state) {
-      state.isOpen = true;
+    openLogInModal(state) {
+      state.isOpenLogInModal = true;
     },
-    closeModal(state) {
-      state.isOpen = false;
+    closeLogInModal(state) {
+      state.isOpenLogInModal = false;
+    },
+    openSignUpModal(state) {
+      state.isOpenSignUpModal = true;
+    },
+    closeSignUpModal(state) {
+      state.isOpenSignUpModal = false;
     }
   },
 });
 
-export const { openModal, closeModal } = modalAuthSlice.actions
+export const { openLogInModal, closeLogInModal, openSignUpModal, closeSignUpModal } = modalAuthSlice.actions
 
 export default modalAuthSlice.reducer
