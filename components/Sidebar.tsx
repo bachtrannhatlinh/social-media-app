@@ -17,8 +17,8 @@ type SidebarProps = {
 
 export default function Sidebar({ username, email }: SidebarProps) {
   return (
-    <nav className="h-screen hidden sm:flex flex-col sticky top-0 p-3 xl:ml-20">
-      <div className="relative h-full flex flex-col items-center">
+    <nav className="h-screen hidden sm:flex flex-col sticky top-0 xl:ml-20">
+      <div className="relative h-full flex flex-col items-center border-r">
         <div className="py-3">
           <Image
             src={"/assets/troll-logo.jpg"}
@@ -49,7 +49,7 @@ export default function Sidebar({ username, email }: SidebarProps) {
         spaxe-x-2 xl:p-3 xl:pe-6 hover:bg-gray-500 hover:bg-opacity-10
         rounded-full cursor-pointer transition"
           >
-            <div className="flex items-center p-2.5">
+            <div className="flex items-center p-2.5 space-x-2">
               <Image
                 src={"/assets/user-logo.png"}
                 alt="User"
@@ -59,7 +59,7 @@ export default function Sidebar({ username, email }: SidebarProps) {
               />
               <div className="hidden xl:flex flex-col text-sm">
                 <p className="font-bold">{username}</p>
-                <p className="text-gray-500">@{email}</p>
+                <p className="text-gray-500">{email}</p>
               </div>
             </div>
           </div>
