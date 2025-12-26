@@ -3,6 +3,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import authModalReducer from "../features/modalAuth/authSlice";
 import infouserReducer from "../features/infoUser/infoUserSlice";
 import replyCommentModalReducer from "../features/replyCommentModal/replyCommentSlice";
+import updateCommentModalReducer from "../features/updateCommentModal/updateCommentSlice";
+import deleteCommentModalReducer from "../features/deleteCommentModal/deleteCommentSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -10,6 +12,8 @@ export const makeStore = () => {
       authModal: authModalReducer,
       userInfo: infouserReducer,
       replyCommentModal: replyCommentModalReducer,
+      updateCommentModal: updateCommentModalReducer,
+      deleteCommentModal: deleteCommentModalReducer,
     },
   });
 };

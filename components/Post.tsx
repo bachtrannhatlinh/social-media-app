@@ -3,12 +3,16 @@ import React, { useEffect, useState } from "react";
 import { FaRegComment } from "react-icons/fa";
 import { AiOutlineHeart } from "react-icons/ai";
 import { IoStatsChart } from "react-icons/io5";
-import { FiShare } from "react-icons/fi";
+import { FiDelete, FiEdit, FiShare, FiTrash } from "react-icons/fi";
 import { useAppDispatch } from "@/lib/hooks";
 import { openReplyCommentModal } from "@/features/replyCommentModal/replyCommentSlice";
 import ReplyCommentModal from "./Modals/ReplyCommentModal";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase/config";
+import UpdateCommentModal from "./Modals/UpdateCommentModal";
+import { openUpdateCommentModal } from "@/features/updateCommentModal/updateCommentSlice";
+import DeleteCommentModal from "./Modals/DeleteCommentModal";
+import { openDeleteCommentModal } from "@/features/deleteCommentModal/deleteCommentSlice";
 
 interface PostProps {
   post: {
@@ -49,18 +53,46 @@ export default function Post({ post }: PostProps) {
   }, [post.id]);
 
   const handleReplyComment = () => {
-    dispatch(openReplyCommentModal({
-      commentId: post.id,
-      userId: post.userId,
-      username: post.username,
-      displayName: post.username,
-      content: post.content,
-    }));
+    dispatch(
+      openReplyCommentModal({
+        commentId: post.id,
+        userId: post.userId,
+        username: post.username,
+        displayName: post.username,
+        content: post.content,
+      })
+    );
   };
+
+  const handleUpdateComment = () => {
+    dispatch(
+      openUpdateCommentModal({
+        commentId: post.id,
+        userId: post.userId,
+        username: post.username,
+        displayName: post.username,
+        content: post.content,
+      })
+    );
+  }
+
+  const handleDeleteComment = () => {
+    dispatch(
+      openDeleteCommentModal({
+        commentId: post.id,
+        userId: post.userId,
+        username: post.username,
+        displayName: post.username,
+        content: post.content,
+      })
+    );
+  }
 
   return (
     <>
       <ReplyCommentModal />
+      <UpdateCommentModal />
+      <DeleteCommentModal />
       <div className="border-b border-gray-200">
         <div className="flex p-3 space-x-3">
           <Image
@@ -105,9 +137,15 @@ export default function Post({ post }: PostProps) {
               <div className="flex items-center space-x-2 cursor-pointer hover:text-blue-500 group">
                 <IoStatsChart className="w-4 h-4" />
               </div>
-              <div className="flex items-center cursor-pointer hover:text-blue-500 group">
+              <button className="flex items-center space-x-2 cursor-pointer hover:text-blue-500 group">
                 <FiShare className="w-4 h-4" />
-              </div>
+              </button>
+              <button className="flex items-center cursor-pointer hover:text-blue-500 group" onClick={handleUpdateComment}>
+                <FiEdit className="w-4 h-4" />
+              </button>
+              <button className="flex items-center cursor-pointer hover:text-blue-500 group" onClick={handleDeleteComment}>
+                <FiTrash className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
