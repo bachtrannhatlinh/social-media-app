@@ -9,6 +9,8 @@ import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 interface PostData {
   id: string;
   content: string;
+  userId: string;
+  username: string;
   createdAt: { seconds: number } | null;
 }
 

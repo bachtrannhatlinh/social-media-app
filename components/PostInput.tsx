@@ -8,21 +8,31 @@ import {
   PhotoIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { db } from "@/firebase/config";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { useAppSelector } from "@/lib/hooks";
+import { toast } from "react-toastify";
 
 export default function PostInput() {
+  const { username, userId } = useAppSelector((state) => state.userInfo);
+
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (!text.trim()) return;
+
+    if(!username || !userId) {
+      return toast.error("You must be logged in to post.");
+    }
     
     setLoading(true);
     try {
       await addDoc(collection(db, "posts"), {
         content: text,
+        username: username || "Anonymous",
+        userId: userId,
         createdAt: serverTimestamp(),
       });
       setText("");

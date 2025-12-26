@@ -9,13 +9,20 @@ import {
   EllipsisHorizontalCircleIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { useAppDispatch } from "@/lib/hooks";
+import { clearUserInfo } from "@/features/infoUser/infoUserSlice";
 
 type SidebarProps = {
-  username: string|null;
-  email: string|null;
+  username: string | null;
+  email: string | null;
 };
 
 export default function Sidebar({ username, email }: SidebarProps) {
+  const dispatch = useAppDispatch();
+  const handleLogout = () => {
+    dispatch(clearUserInfo());
+  };
+
   return (
     <nav className="h-screen hidden sm:flex flex-col sticky top-0 xl:ml-20">
       <div className="relative h-full flex flex-col items-center border-r">
@@ -35,21 +42,27 @@ export default function Sidebar({ username, email }: SidebarProps) {
           <SidebarLink Icon={BookmarkIcon} text="Bookmarks" />
           <SidebarLink Icon={UserIcon} text="Profile" />
           <SidebarLink Icon={EllipsisHorizontalCircleIcon} text="More" />
-          <button
+          {/* <button
             className="xl:block hidden bg-[#F4AF01] w-[200px] h-[52px] rounded-full
           text-white font-medium cursor-pointer shadow-md mt-2"
           >
             Bumble
-          </button>
+          </button> */}
         </ul>
 
         {username && (
-          <div
-            className="absolute bottom-3 flex items-center justify-center
-        spaxe-x-2 xl:p-3 xl:pe-6 hover:bg-gray-500 hover:bg-opacity-10
-        rounded-full cursor-pointer transition"
-          >
-            <div className="flex items-center p-2.5 space-x-2">
+          <div className="absolute bottom-3 flex flex-col items-center group">
+            <button
+              className="hidden group-hover:block bg-red-500 text-white font-bold 
+                px-4 py-2 rounded-full mb-2 hover:bg-red-600 transition"
+              onClick={handleLogout}
+            >
+              LOGOUT
+            </button>
+            <div
+              className="flex items-center justify-center space-x-2 p-2.5
+                hover:bg-gray-500 hover:bg-opacity-10 rounded-full cursor-pointer transition"
+            >
               <Image
                 src={"/assets/user-logo.png"}
                 alt="User"

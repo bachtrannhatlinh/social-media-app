@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import authModalReducer from "../features/modalAuth/authSlice";
 import infouserReducer from "../features/infoUser/infoUserSlice";
+import replyCommentModalReducer from "../features/replyCommentModal/replyCommentSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       authModal: authModalReducer,
       userInfo: infouserReducer,
+      replyCommentModal: replyCommentModalReducer,
     },
   });
 };
