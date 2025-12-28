@@ -9,8 +9,8 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { useAppDispatch, useAppSelector } from "../../lib/hooks";
-import { closeDeleteCommentModal } from "@/features/deleteCommentModal/deleteCommentSlice";
 import { deletePost } from "@/app/actions/post";
+import { closeDeleteCommentModal } from "@/features/post/commentSlice";
 
 const style = {
   position: "absolute",
@@ -27,7 +27,7 @@ const style = {
 };
 
 export default function DeleteCommentModal() {
-  const { isOpen, commentData } = useAppSelector((state) => state.deleteCommentModal);
+  const { isOpenDeleteCommentModal, commentData } = useAppSelector((state) => state.post);
   const dispatch = useAppDispatch();
   const [isDeleting, setIsDeleting] = React.useState(false);
 
@@ -48,11 +48,10 @@ export default function DeleteCommentModal() {
     }
   };
 
-  if (!isOpen || !commentData) return null;
-
+  if (!isOpenDeleteCommentModal || !commentData) return null;
   return (
     <Modal
-      open={isOpen}
+      open={isOpenDeleteCommentModal}
       onClose={handleClose}
       aria-labelledby="delete-comment-modal"
       slotProps={{

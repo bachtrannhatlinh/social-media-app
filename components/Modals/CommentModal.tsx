@@ -17,9 +17,9 @@ import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
 import { useAppDispatch, useAppSelector } from "../../lib/hooks";
-import { closeReplyCommentModal } from "@/features/replyCommentModal/replyCommentSlice";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/firebase/config";
+import { closeCommentModal } from "@/features/post/commentSlice";
 
 const style = {
   position: "absolute",
@@ -35,24 +35,24 @@ const style = {
   outline: "none",
 };
 
-export default function ReplyCommentModal() {
-  const { isOpen, commentData } = useAppSelector((state) => state.replyCommentModal);
+export default function CommentModal() {
+  const { isOpenCommentModal, commentData } = useAppSelector((state) => state.post);
   const dispatch = useAppDispatch();
   const [replyText, setReplyText] = useState("");
 
   const handleClose = () => {
     setReplyText("");
-    dispatch(closeReplyCommentModal());
+    dispatch(closeCommentModal());
   };
 
   const handleSubmitReply = async() => {
     if (!replyText.trim()) return;
     try {
-      await addDoc(collection(db, "comments"), {
+      const commentsRef = collection(db, "posts", commentData?.commentId!, "comments");
+      await addDoc(commentsRef, {
         content: replyText,
-        parentCommentId: commentData?.commentId,
-        userId: commentData?.userId,
         username: commentData?.username,
+        userId: commentData?.userId,
         createdAt: serverTimestamp(),
       });
       setReplyText("");
@@ -63,11 +63,11 @@ export default function ReplyCommentModal() {
     }
   };
 
-  if (!isOpen || !commentData) return null;
+  if (!isOpenCommentModal || !commentData) return null;
 
   return (
     <Modal
-      open={isOpen}
+      open={isOpenCommentModal}
       onClose={handleClose}
       aria-labelledby="reply-comment-modal"
       slotProps={{
@@ -103,7 +103,7 @@ export default function ReplyCommentModal() {
             >
               {/* Original comment avatar */}
               <Avatar
-                src={commentData.avatarUrl}
+                src={commentData?.avatarUrl}
                 sx={{ width: 40, height: 40, bgcolor: "#e0e0e0" }}
               />
               {/* Connecting line */}

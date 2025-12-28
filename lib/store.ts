@@ -1,19 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import authModalReducer from "../features/modalAuth/authSlice";
-import infouserReducer from "../features/infoUser/infoUserSlice";
-import replyCommentModalReducer from "../features/replyCommentModal/replyCommentSlice";
-import updateCommentModalReducer from "../features/updateCommentModal/updateCommentSlice";
-import deleteCommentModalReducer from "../features/deleteCommentModal/deleteCommentSlice";
+import infoUserReducer from "../features/infoUser/infoUserSlice";
+import postReducder from "../features/post/commentSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       authModal: authModalReducer,
-      userInfo: infouserReducer,
-      replyCommentModal: replyCommentModalReducer,
-      updateCommentModal: updateCommentModalReducer,
-      deleteCommentModal: deleteCommentModalReducer,
+      userInfo: infoUserReducer,
+      post: postReducder
     },
   });
 };

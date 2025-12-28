@@ -22,7 +22,6 @@ import {
   openSignUpModal,
   closeSignUpModal,
 } from "@/features/modalAuth/authSlice";
-import { setUserInfo } from "@/features/infoUser/infoUserSlice";
 
 const style = {
   position: "absolute",

@@ -1,8 +1,7 @@
-"use server";
-
 import { db } from "@/firebase/config";
 import { collection, addDoc, serverTimestamp, updateDoc, doc, deleteDoc } from "firebase/firestore";
 
+// Create a new post
 export async function createPost(content: string, username: string, userId: string) {
   if (!content.trim()) {
     throw new Error("Post content cannot be empty.");
@@ -16,6 +15,7 @@ export async function createPost(content: string, username: string, userId: stri
   return docRef.id;
 }
 
+// Update an existing post
 export async function updatePost(content: string, userId: string) {
   if (!content.trim()) {
     throw new Error("Post content cannot be empty.");
@@ -28,6 +28,7 @@ export async function updatePost(content: string, userId: string) {
     
 }
 
+// Delete a post
 export async function deletePost(postId: string) {
   const postRef = doc(db, "posts", postId);
   return await deleteDoc(postRef);

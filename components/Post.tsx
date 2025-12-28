@@ -3,20 +3,24 @@ import React, { useEffect, useState } from "react";
 import { FaRegComment } from "react-icons/fa";
 import { AiOutlineHeart } from "react-icons/ai";
 import { IoStatsChart } from "react-icons/io5";
-import { FiDelete, FiEdit, FiShare, FiTrash } from "react-icons/fi";
+import { FiEdit, FiShare, FiTrash } from "react-icons/fi";
 import { useAppDispatch } from "@/lib/hooks";
-import { openReplyCommentModal } from "@/features/replyCommentModal/replyCommentSlice";
-import ReplyCommentModal from "./Modals/ReplyCommentModal";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import UpdateCommentModal from "./Modals/UpdateCommentModal";
-import { openUpdateCommentModal } from "@/features/updateCommentModal/updateCommentSlice";
 import DeleteCommentModal from "./Modals/DeleteCommentModal";
-import { openDeleteCommentModal } from "@/features/deleteCommentModal/deleteCommentSlice";
+import {
+  openCommentModal,
+  openDeleteCommentModal,
+  openUpdateCommentModal,
+} from "@/features/post/commentSlice";
+import CommentModal from "./Modals/CommentModal";
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 interface PostProps {
+  id: string;
   post: {
-    id: string;
     content: string;
     userId: string;
     username: string;
@@ -34,7 +38,7 @@ function formatTimeAgo(seconds: number): string {
   return `${Math.floor(diff / 86400)}d ago`;
 }
 
-export default function Post({ post }: PostProps) {
+export default function Post({ id, post }: PostProps) {
   const dispatch = useAppDispatch();
   const [commentCount, setCommentCount] = useState(0);
   const timeAgo = post.createdAt
@@ -42,20 +46,19 @@ export default function Post({ post }: PostProps) {
     : "just now";
 
   useEffect(() => {
-    const q = query(
-      collection(db, "comments"),
-      where("parentCommentId", "==", post.id)
+    const unsubscribe = onSnapshot(
+      collection(db, "posts", id, "comments"),
+      (snapshot) => {
+        setCommentCount(snapshot.size);
+      }
     );
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setCommentCount(snapshot.size);
-    });
     return () => unsubscribe();
-  }, [post.id]);
+  }, [id]);
 
-  const handleReplyComment = () => {
+  const handleCommentModal = () => {
     dispatch(
-      openReplyCommentModal({
-        commentId: post.id,
+      openCommentModal({
+        commentId: id,
         userId: post.userId,
         username: post.username,
         displayName: post.username,
@@ -67,34 +70,34 @@ export default function Post({ post }: PostProps) {
   const handleUpdateComment = () => {
     dispatch(
       openUpdateCommentModal({
-        commentId: post.id,
+        commentId: id,
         userId: post.userId,
         username: post.username,
         displayName: post.username,
         content: post.content,
       })
     );
-  }
+  };
 
   const handleDeleteComment = () => {
     dispatch(
       openDeleteCommentModal({
-        commentId: post.id,
+        commentId: id,
         userId: post.userId,
         username: post.username,
         displayName: post.username,
         content: post.content,
       })
     );
-  }
+  };
 
   return (
     <>
-      <ReplyCommentModal />
+      <CommentModal />
       <UpdateCommentModal />
       <DeleteCommentModal />
       <div className="border-b border-gray-200">
-        <div className="flex p-3 space-x-3">
+        <div className="flex p-3 space-x-3 group">
           <Image
             src={"/assets/troll-logo.jpg"}
             alt="Avatar"
@@ -125,7 +128,7 @@ export default function Post({ post }: PostProps) {
             <div className="flex justify-between mt-3 max-w-[400px] text-[#707E89]">
               <button
                 className="flex items-center space-x-2 cursor-pointer hover:text-blue-500 group"
-                onClick={handleReplyComment}
+                onClick={handleCommentModal}
               >
                 <FaRegComment className="w-4 h-4" />
                 <span className="text-sm">{commentCount}</span>
@@ -140,14 +143,27 @@ export default function Post({ post }: PostProps) {
               <button className="flex items-center space-x-2 cursor-pointer hover:text-blue-500 group">
                 <FiShare className="w-4 h-4" />
               </button>
-              <button className="flex items-center cursor-pointer hover:text-blue-500 group" onClick={handleUpdateComment}>
+              <button
+                className="flex items-center cursor-pointer hover:text-blue-500 group"
+                onClick={handleUpdateComment}
+              >
                 <FiEdit className="w-4 h-4" />
               </button>
-              <button className="flex items-center cursor-pointer hover:text-blue-500 group" onClick={handleDeleteComment}>
+              <button
+                className="flex items-center cursor-pointer hover:text-blue-500 group"
+                onClick={handleDeleteComment}
+              >
                 <FiTrash className="w-4 h-4" />
               </button>
             </div>
           </div>
+          {/* <button className="hidden group-hover:block" onClick={handleDetailPost(post.id)}>
+            <EllipsisHorizontalIcon className="w-[22px] h-[22px]" />
+          </button> */}
+        
+          <Link href={`/${id}`} className="hidden group-hover:block">
+            <EllipsisHorizontalIcon className="w-[22px] h-[22px]" />
+          </Link>
         </div>
       </div>
     </>

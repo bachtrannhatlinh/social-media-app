@@ -9,16 +9,13 @@ import {
   EllipsisHorizontalCircleIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { clearUserInfo } from "@/features/infoUser/infoUserSlice";
 
-type SidebarProps = {
-  username: string | null;
-  email: string | null;
-};
-
-export default function Sidebar({ username, email }: SidebarProps) {
+export default function Sidebar() {
+  const { username, email } = useAppSelector((state) => state.userInfo);
   const dispatch = useAppDispatch();
+  
   const handleLogout = () => {
     dispatch(clearUserInfo());
   };

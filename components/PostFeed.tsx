@@ -18,13 +18,19 @@ export default function PostFeed() {
   const [posts, setPosts] = useState<PostData[]>([]);
 
   useEffect(() => {
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+    const q = query(collection(db, "posts"));
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const postsData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as PostData[];
+      const postsData: PostData[] = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          content: data.content ?? "",
+          userId: data.userId ?? "",
+          username: data.username ?? "",
+          createdAt: data.createdAt ?? null,
+        };
+      });
       setPosts(postsData);
     });
 
@@ -36,7 +42,7 @@ export default function PostFeed() {
       <div className="font-bold text-xl pl-3 py-3">Home</div>
       <PostInput />
       {posts.map((post) => (
-        <Post key={post.id} post={post} />
+        <Post key={post.id} id={post.id} post={post} />
       ))}
     </div>
   );

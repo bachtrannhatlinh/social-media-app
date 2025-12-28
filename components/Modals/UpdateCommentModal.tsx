@@ -17,8 +17,8 @@ import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
 import { useAppDispatch, useAppSelector } from "../../lib/hooks";
-import { closeUpdateCommentModal } from "@/features/updateCommentModal/updateCommentSlice";
 import { updatePost } from "@/app/actions/post";
+import { closeUpdateCommentModal } from "@/features/post/commentSlice";
 
 const style = {
   position: "absolute",
@@ -35,7 +35,7 @@ const style = {
 };
 
 export default function UpdateCommentModal() {
-  const { isOpen, commentData } = useAppSelector((state) => state.updateCommentModal);
+  const { isOpenUpdateCommentModal, commentData } = useAppSelector((state) => state.post);
   const dispatch = useAppDispatch();
   const [editText, setEditText] = useState("");
 
@@ -53,7 +53,6 @@ export default function UpdateCommentModal() {
   const handleSubmitUpdate = async () => {
     if (!editText.trim() || !commentData?.commentId) return;
     try {
-      console.log("Updating comment:", commentData.commentId, editText);
       updatePost(editText, commentData.commentId);
       setEditText("");
     } catch (error) {
@@ -63,11 +62,10 @@ export default function UpdateCommentModal() {
     }
   };
 
-  if (!isOpen || !commentData) return null;
-
+  if (!isOpenUpdateCommentModal || !commentData) return null;
   return (
     <Modal
-      open={isOpen}
+      open={isOpenUpdateCommentModal}
       onClose={handleClose}
       aria-labelledby="update-comment-modal"
       slotProps={{
@@ -106,7 +104,7 @@ export default function UpdateCommentModal() {
               }}
             >
               <Avatar
-                src={commentData.avatarUrl}
+                src={commentData?.avatarUrl}
                 sx={{ width: 40, height: 40, bgcolor: "#e0e0e0" }}
               />
             </Box>
